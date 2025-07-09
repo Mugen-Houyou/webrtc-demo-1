@@ -95,3 +95,22 @@ their peer connections.
 **Important:** modern browsers increasingly block plain `ws://` connections.
 When deploying anywhere other than `localhost`, run the server behind HTTPS and
 connect using `wss://` with a valid certificate.
+
+### TURN Server Configuration
+
+The default demo relies on public STUN only and works best when all participants
+are on the same network. To support connecting across different networks, supply
+a TURN server via environment variables. Add the following to your `.env` file:
+
+```env
+# Address of your TURN server
+TURN_SERVER_URL=turn:your.turn.server:3478
+TURN_USERNAME=optional-user
+TURN_PASSWORD=optional-password
+# Optionally override the default STUN server
+STUN_SERVER_URL=stun:stun.l.google.com:19302
+```
+
+The page at `/static/webrtc_test.html` automatically fetches the ICE server
+configuration from `/api/v1/ws/ice-config` and uses it when creating
+`RTCPeerConnection` objects.

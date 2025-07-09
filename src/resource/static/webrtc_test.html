@@ -26,8 +26,18 @@
       let ws;
       let localStream;
       let name;
+      let iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
       const peerConnections = {};
       const pendingCandidates = {};
+
+      fetch("/api/v1/ws/ice-config")
+        .then((r) => r.json())
+        .then((cfg) => {
+          if (cfg.iceServers) {
+            iceServers = cfg.iceServers;
+          }
+        })
+        .catch(() => {});
 
       function leaveRoom() {
         if (ws && ws.readyState === WebSocket.OPEN) {
@@ -43,7 +53,7 @@
 
       function createPeerConnection(peer) {
         const pc = new RTCPeerConnection({
-          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+          iceServers,
         });
         peerConnections[peer] = pc;
         localStream

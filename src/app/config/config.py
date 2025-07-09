@@ -21,5 +21,13 @@ class Settings(BaseSettings):
     DB_NAME: str = os.environ.get("DB_NAME", "")
     DB_URL: str = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
 
+    STUN_SERVER_URL: str = os.environ.get(
+        "STUN_SERVER_URL",
+        "stun:stun.l.google.com:19302",
+    )
+    TURN_SERVER_URL: str | None = os.environ.get("TURN_SERVER_URL")
+    TURN_USERNAME: str | None = os.environ.get("TURN_USERNAME")
+    TURN_PASSWORD: str | None = os.environ.get("TURN_PASSWORD")
+
 
 settings = Settings()

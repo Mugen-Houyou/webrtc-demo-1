@@ -1,6 +1,9 @@
-from typing import Dict
+from typing import Dict, List
 import json
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
+
+from src.app.config.config import settings
 
 router = APIRouter()
 
@@ -10,7 +13,12 @@ class ConnectionManager:
         # Mapping of room -> username -> WebSocket
         self.active_connections: Dict[str, Dict[str, WebSocket]] = {}
 
-    async def connect(self, room: str, username: str, websocket: WebSocket) -> None:
+    async def connect(
+        self,
+        room: str,
+        username: str,
+        websocket: WebSocket,
+    ) -> None:
         await websocket.accept()
         self.active_connections.setdefault(room, {})
         self.active_connections[room][username] = websocket
@@ -32,8 +40,29 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
+def build_ice_servers() -> List[dict]:
+    servers = [{"urls": settings.STUN_SERVER_URL}]
+    if settings.TURN_SERVER_URL:
+        turn: dict[str, str] = {"urls": settings.TURN_SERVER_URL}
+        if settings.TURN_USERNAME:
+            turn["username"] = settings.TURN_USERNAME
+        if settings.TURN_PASSWORD:
+            turn["credential"] = settings.TURN_PASSWORD
+        servers.append(turn)
+    return servers
+
+
+@router.get("/ice-config")
+async def ice_config() -> JSONResponse:
+    return JSONResponse({"iceServers": build_ice_servers()})
+
+
 @router.websocket("/webrtc/{room}")
-async def websocket_endpoint(websocket: WebSocket, room: str, username: str | None = None):
+async def websocket_endpoint(
+    websocket: WebSocket,
+    room: str,
+    username: str | None = None,
+):
     if username is None:
         await websocket.close()
         return
