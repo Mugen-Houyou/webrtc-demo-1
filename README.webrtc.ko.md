@@ -14,7 +14,7 @@ http://localhost:8000/static/webrtc_test.html
 기본 예제는 퍼블릭 STUN 서버만 사용하므로 동일 네트워크 내에서 가장 잘 동작합니다. 다른 네트워크 환경에서도 연결하려면 TURN 서버 정보를 `.env` 파일에 추가합니다.
 
 ```env
-TURN_SERVER_URL=turn:your.turn.server:3478
+TURN_SERVER_URLS=turn:your.turn.server:3478
 TURN_USERNAME=optional-user
 TURN_PASSWORD=optional-password
 STUN_SERVER_URL=stun:stun.l.google.com:19302

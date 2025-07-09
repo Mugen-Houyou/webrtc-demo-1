@@ -1,4 +1,5 @@
 import os
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
@@ -25,9 +26,20 @@ class Settings(BaseSettings):
         "STUN_SERVER_URL",
         "stun:stun.l.google.com:19302",
     )
+    TURN_SERVER_URLS: list[str] = []
     TURN_SERVER_URL: str | None = os.environ.get("TURN_SERVER_URL")
     TURN_USERNAME: str | None = os.environ.get("TURN_USERNAME")
     TURN_PASSWORD: str | None = os.environ.get("TURN_PASSWORD")
+
+    @model_validator(mode="after")
+    def build_turn_server_list(self) -> "Settings":
+        if not self.TURN_SERVER_URLS:
+            env_value = os.environ.get("TURN_SERVER_URLS")
+            if env_value:
+                self.TURN_SERVER_URLS = [u.strip() for u in env_value.split(",") if u.strip()]
+        if not self.TURN_SERVER_URLS and self.TURN_SERVER_URL:
+            self.TURN_SERVER_URLS = [self.TURN_SERVER_URL]
+        return self
 
 
 settings = Settings()
