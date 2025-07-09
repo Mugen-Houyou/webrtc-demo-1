@@ -54,15 +54,14 @@
 Uvicorn으로 FastAPI 애플리케이션을 실행합니다:
 
 ```bash
-poetry run uvicorn src.app.main:app --reload
+poetry run uvicorn src.app.main:app --host 0.0.0.0 --port 8000
 ```
 
-API는 `http://localhost:8000/`에서 확인할 수 있으며, 인증 엔드포인트는 `/api/v1` 로 시작합니다 (예: `/api/v1/auth/sign-up`).
+이렇게 하면 API는 `http://localhost:8000/`에서 확인할 수 있으며, 인증 엔드포인트는 `/api/v1` 로 시작합니다 (예: `/api/v1/auth/sign-up`).
 
 ### WebRTC 시그널링
 
-CodeArena 서비스에서 플레이어들이 음성/영상 통화를 할 수 있도록 WebRTC 시그널링용
-WebSocket 엔드포인트를 제공합니다. 다음과 같이 접속합니다.
+CodeArena 서비스에서 플레이어들이 음성/영상 통화를 할 수 있도록 WebRTC 시그널링용 WebSocket 엔드포인트를 제공합니다. 다음과 같이 접속합니다.
 
 ```text
 /api/v1/ws/webrtc/<room>?username=<사용자명>
@@ -70,4 +69,4 @@ WebSocket 엔드포인트를 제공합니다. 다음과 같이 접속합니다.
 
 이 소켓으로 전송된 메시지는 같은 방의 다른 참가자들에게 브로드캐스트됩니다.
 
-WebRTC 테스트 프론트엔드 사용법은 [README.webrtc.ko.md](README.webrtc.ko.md)에서 확인하세요.
+자세한 WebRTC 테스트 프론트엔드 사용법은 [README.webrtc.ko.md](README.webrtc.ko.md)에서 확인하세요.
