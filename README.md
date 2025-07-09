@@ -103,8 +103,8 @@ are on the same network. To support connecting across different networks, supply
 a TURN server via environment variables. Add the following to your `.env` file:
 
 ```env
-# Address of your TURN server
-TURN_SERVER_URL=turn:your.turn.server:3478
+# Addresses of your TURN servers (comma separated)
+TURN_SERVER_URLS=turn:your.turn.server:3478
 TURN_USERNAME=optional-user
 TURN_PASSWORD=optional-password
 # Optionally override the default STUN server

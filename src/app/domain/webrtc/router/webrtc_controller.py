@@ -42,8 +42,8 @@ manager = ConnectionManager()
 
 def build_ice_servers() -> List[dict]:
     servers = [{"urls": settings.STUN_SERVER_URL}]
-    if settings.TURN_SERVER_URL:
-        turn: dict[str, str] = {"urls": settings.TURN_SERVER_URL}
+    for url in settings.TURN_SERVER_URLS:
+        turn: dict[str, str] = {"urls": url}
         if settings.TURN_USERNAME:
             turn["username"] = settings.TURN_USERNAME
         if settings.TURN_PASSWORD:
